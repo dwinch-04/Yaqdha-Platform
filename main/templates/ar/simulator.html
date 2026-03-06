@@ -1,0 +1,104 @@
+{% extends 'ar/base.html' %}
+{% block content %}
+<style>
+    .scenario-card { display: none; }
+    .scenario-card.active { display: block !important; }
+    
+    .explanation-text { line-height: 1.6; }
+</style>
+
+<div class="container mt-5 text-center" dir="rtl" style="max-width: 800px;">
+    
+    <div id="intro-screen">
+        <h1 class="mb-4">هل يمكنك أن تعرف متى تعرضت للتصيد الاحتيالي؟</h1>
+        <p class="lead">تحاول هجمات التصيّد الاحتيالي خداع المستخدمين غير المُرتابين لكي يكشفوا عن معلوماتهم الشخصية أو المالية، وغالبًا ما يتم ذلك عن طريق محاكاة محتوى من شركات معروفة وموثوق بها.</p>
+        <div class="alert alert-info">
+            باستخدام الذكاء الاصطناعي، أصبحت هجمات التصيّد الاحتيالي أكثر تطوّرًا وتخصيصًا وانتشارًا.
+        </div>
+        <h4 class="mt-4">هل يمكنك تحديد ما إذا كان المحتوى حقيقيًا أم مزيفًا؟</h4>
+        <button onclick="startGame()" class="btn btn-primary btn-lg mt-3 px-5">ابدأ التحدي</button>
+    </div>
+
+    <div id="game-container" style="display: none;">
+        {% for scenario in scenarios %}
+        <div class="scenario-card {% if forloop.first %}active{% endif %}">
+            <div class="card mx-auto shadow" style="max-width: 500px; border-radius: 15px;">
+                <div class="card-header bg-dark text-white">الرسالة {{ forloop.counter }} من {{ scenarios|length }}</div>
+                
+                <div class="p-3 bg-white">
+                    <img src="{{ scenario.image.url }}" class="card-img" style="max-height: 400px; object-fit: contain;">
+                </div>
+                
+                <div class="card-body action-area">
+                    <p class="fw-bold mb-4">ما هو قرارك؟</p>
+                    <div class="d-grid gap-2 d-md-block">
+                        <button onclick="checkAnswer(this, true)" 
+                                data-is-scam="{{ scenario.is_scam|yesno:'true,false' }}" 
+                                data-explanation="{{ scenario.explanation_ar|escapejs }}"
+                                class="btn btn-danger btn-lg px-4 m-1">🚩 تصيد احتيالي</button>
+
+                        <button onclick="checkAnswer(this, false)" 
+                                data-is-scam="{{ scenario.is_scam|yesno:'true,false' }}" 
+                                data-explanation="{{ scenario.explanation_ar|escapejs }}"
+                                class="btn btn-success btn-lg px-4 m-1">✅ آمن</button>
+                    </div>
+                </div>
+
+                <div class="result-box card-footer" style="display: none; background-color: #f8f9fa;">
+                    <h3 class="feedback-title"></h3>
+                    <hr>
+                    <p class="explanation-text" style="font-size: 1.1rem;"></p>
+                    
+                    {% if forloop.last %}
+                        <button onclick="location.reload()" class="btn btn-dark mt-3">إعادة الاختبار 🔄</button>
+                    {% else %}
+                        <button onclick="nextScenario(this)" class="btn btn-primary mt-3 px-4">الرسالة التالية ⬅️</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function startGame() {
+    document.getElementById('intro-screen').style.display = 'none';
+    document.getElementById('game-container').style.display = 'block';
+}
+
+function checkAnswer(btn, userChoice) {
+    const currentCard = btn.closest('.scenario-card');
+    const isScam = btn.getAttribute('data-is-scam') === 'true';
+    const explanation = btn.getAttribute('data-explanation');
+
+    currentCard.querySelector('.action-area').style.display = 'none';
+    const resultBox = currentCard.querySelector('.result-box');
+    resultBox.style.display = 'block';
+
+    const title = currentCard.querySelector('.feedback-title');
+    if (userChoice === isScam) {
+        title.innerText = "إجابة صحيحة! 🎉";
+        title.className = "text-success fw-bold";
+    } else {
+        title.innerText = "للأسف، إجابة خاطئة! ❌";
+        title.className = "text-danger fw-bold";
+    }
+    currentCard.querySelector('.explanation-text').innerText = explanation;
+}
+
+function nextScenario(btn) {
+    const currentCard = btn.closest('.scenario-card');
+    const nextCard = currentCard.nextElementSibling;
+
+    if (nextCard && nextCard.classList.contains('scenario-card')) {
+        currentCard.classList.remove('active');
+        nextCard.classList.add('active');
+        window.scrollTo(0, 0);
+    } else {
+        alert("عمل رائع! لقد أكملت التحدي بنجاح.");
+        location.reload();
+    }
+}
+</script>
+{% endblock %}

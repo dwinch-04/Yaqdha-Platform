@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>يقظة SA | التوعية ضد الاحتيال</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+<ul class="circles-area">
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+</ul>
+<header>
+    <div class="logo-container">
+        <img src="{% static 'logo.png' %}" class="site-logo" alt="Logo">
+        <h1>يقظة SA</h1>
+    </div>
+    <nav>
+        <a href="{% url 'scams' %}">الأنواع</a>
+        <a class="nav-link" href="{% url 'simulator_ar' %}">اختبر نفسك (المحاكي)</a>
+        <a href="{% url 'home_en' %}" class="lang-switch">English 🌐</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="warning-banner">
+        <span>⚠️ <strong>تحذير أمني:</strong> الجهات الحكومية والبنوك في السعودية لا تطلب أرقامك السرية أو رموز التحقق عبر الاتصال أو الروابط.</span>
+    </div>
+
+    <section>
+    <h2>أكثر أساليب الاحتيال شيوعاً في المملكة العربية السعودية</h2>
+    <p>ابقَ على اطلاع بأحدث طرق الأحتيال التي يستخدمها المحتالون على الصعيد المحلي.</p>
+
+             <div class="scam-grid">
+             {% for scam in scams %}
+             <div class="scam-card">
+             <h3>{{ scam.title_ar }}</h3>
+             <p>{{ scam.description_ar }}</p>
+             <a href="{% url 'scam_detail' pk=scam.pk %}" class="btn-more">عرض التفاصيل</a>
+            </div>
+            {% empty %}
+            <p>لا يوجد أنواع احتيال مضافة حالياً.</p>
+            {% endfor %}
+            </div>
+
+        <div style="text-align: center;">
+        <a href="{% url 'scams' %}" class="btn-more">عرض جميع الأنواع</a>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>يقظة SA - مشروع توعوي للأمن السيبراني</p>
+    <div class="footer-links">
+        <a href="{% url 'report' %}">الإبلاغ عن احتيال</a> | 
+        <a href="{% url 'about' %}">من نحن</a> | 
+        <a href="{% url 'about' %}">هدف الموقع</a>
+    </div>
+</footer>
+<script src="{% static 'script.js' %}"></script>
+</body>
+</html>

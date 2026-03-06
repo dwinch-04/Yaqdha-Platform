@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Reporting | Yaqdha SA</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+.top-rectangles {
+    display: flex;
+    flex-direction: column;   
+    gap: 20px;               
+    margin: 50px auto 40px;   
+    align-items: center;     
+    width: 90%;              
+    max-width: 1000px;         
+}
+
+        .rectangle {
+    width: 100%;             
+    height: 150px;            
+    border-radius: 15px;
+    background: linear-gradient(135deg, #feffff, #d5eefa)!important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    font-size: 18px;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: all 0.3s ease;
+}
+
+.rectangle:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 6px 15px #0d1b2a; 
+    transition: all 0.3s ease; 
+}
+
+        .report-channels {
+    display: flex;
+    justify-content: center;   
+    flex-wrap: wrap;
+    gap: 20px;               
+    margin-bottom: 50px;
+}
+
+.channel-item {
+    flex: none;
+    width: 440px;           
+    padding: 20px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #feffff, #d5eefa)!important;
+    text-align: center;
+    margin: 10px;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: all 0.3s ease; 
+}
+
+        .channel-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px #0d1b2a;
+            transition: all 0.3s ease; 
+        }
+
+        .channel-item img {
+            width: 100px; 
+            height: 100px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            background-color: #eee;
+        }
+
+        .btn-more {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #003366;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-more:hover {
+            background-color: #001e3b;
+        }
+
+        h2, h3, h5, p {
+            margin: 10px 0;
+        }
+
+        .lead {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="ltr-body">
+
+<header>
+    <div class="logo-container">
+        <img src="{% static 'logo.png' %}" class="site-logo" alt="Logo">
+        <h1>Yaqdha SA</h1>
+    </div>
+    <nav>
+        <a href="{% url 'home_en' %}">Home</a>
+        <a href="{% url 'scams_en' %}">Types</a>
+        <a href="{% url 'home' %}" class="lang-switch">العربية 🌐</a>
+    </nav>
+</header>
+
+<div class="top-rectangles">
+    <div class="rectangle">
+        <h2>Report Fraud Attempts</h2>
+        <p class="lead">Together we protect ourselves and our community from online fraud.</p>
+    </div>
+
+    <div class="rectangle">
+        <h3>Important Notice</h3>
+        <p>If you encounter a fraud attempt, we recommend reporting it immediately through the official government channels in Saudi Arabia.</p>
+    </div>
+</div>
+
+<div class="report-channels">
+    <div class="channel-item">
+        <img src="{% static 'x-icon.png' %}" alt="X">
+        <h3>X Platform</h3>
+        <a href="https://x.com/yaqdhaplatform?s=11&t=RICJCmy-CL5on6OAfPS-jA" target="_blank" class="btn-more">Go to Account</a>
+    </div>
+
+    <div class="channel-item">
+        <img src="{% static 'email-icon.png' %}" alt="Email">
+        <h3>Email</h3>
+        <a href="mailto:yaqdha.platform@gmail.com" class="btn-more">Send Email</a>
+    </div>
+</div>
+
+<footer>
+    <p>Yaqdha SA - Cybersecurity Awareness Project</p>
+</footer>
+
+</body>
+</html>

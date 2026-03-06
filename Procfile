@@ -1,0 +1,1 @@
+web: gunicorn yaqdha_platform.wsgi

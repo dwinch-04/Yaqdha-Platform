@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Scam Types | Yaqdha SA</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body class="ltr-body">
+
+<header>
+    <div class="logo-container">
+        <img src="{% static 'logo.png' %}" class="site-logo" alt="Logo">
+        <h1>Yaqdha SA</h1>
+    </div>
+    <nav>
+        <a href="{% url 'home_en' %}">Home</a>
+        <a class="nav-link" href="{% url 'simulator_en' %}">Phishing Simulator</a>
+        <a href="{% url 'home' %}" class="lang-switch">العربية 🌐</a>
+    </nav>
+</header>
+
+<div class="container">
+    <section>
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h2>Encyclopedia of Electronic Fraud at the Local Level</h2>
+            <p>Learn about the deceptive methods used by scammers to stay safe</p>
+        </div>
+
+        <div class="scam-grid">
+    {% for scam in scams %}
+    <div class="scam-card">
+        <h3>{{ scam.title_en }}</h3>
+        <p>{{ scam.description_en }}</p>
+        <a href="{% url 'scam_detail_en' pk=scam.pk %}" class="btn-more">View Details</a>
+    </div>
+    {% empty %}
+    <p>No scam types added yet.</p>
+    {% endfor %}
+</div>
+    </section>
+</div>
+
+<footer>
+    <p>Yaqdha SA - Cybersecurity Awareness Project</p>
+    <div class="footer-links">
+        <a href="{% url 'report_en' %}">Report Fraud</a>
+        <a href="{% url 'about_en' %}">About Us</a>
+        <a href="{% url 'about_en' %}">Our Goal</a>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن | يقظة SA</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+<header>
+    <div class="logo-container">
+        <img src="{% static 'logo.png' %}" class="site-logo" alt="Logo">
+        <h1>يقظة SA</h1>
+    </div>
+    <nav>
+        <a href="{% url 'home' %}">الرئيسية</a>
+        <a href="{% url 'scams' %}">الأنواع</a>
+        <a href="{% url 'home_en' %}" class="lang-switch">English 🌐</a>
+    </nav>
+</header>
+
+<div class="container">
+    <section>
+        <h2> من نحن</h2>
+        <p><strong>يقظة SA</strong> هو مشروع تقني توعوي انطلق كمبادرة ضمن مشروع تخرج، يهدف إلى سد الفجوة المعرفية في مجال الأمن السيبراني لدى الأفراد داخل المملكة العربية السعودية.</p>
+        <p>نحن نؤمن بأن "الإنسان هو خط الدفاع الأول"، ولذلك صممنا هذه المنصة لتكون مرجعاً مبسطاً يشرح أساليب الخداع الإلكتروني بلهجة محلية وأمثلة واقعية تحاكي ما يواجهه المواطن والمقيم يومياً.</p>
+    </section>
+
+    <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ccc;">
+
+    <section>
+        <h2> أهداف الموقع</h2>
+        <ul>
+            <li><strong>رفع الوعي الرقمي:</strong> تثقيف المجتمع حول أحدث أساليب الاحتيال الهندسي والتقني.</li>
+            <li><strong>تقليل الضحايا:</strong> المساهمة في خفض معدلات الوقوع في فخ العمليات الاحتيالية من خلال التنبيه المبكر.</li>
+            <li><strong>التمكين الأمني:</strong> تقديم إرشادات واضحة وخطوات عملية للتعامل مع الرسائل والاتصالات المشبوهة.</li>
+            <li><strong>تعزيز القنوات الرسمية:</strong> توجيه المستخدمين للطرق الصحيحة للإبلاغ عبر الجهات المعنية في الدولة.</li>
+        </ul>
+    </section>
+</div>
+
+<footer>
+    <p>يقظة SA - مشروع توعوي للأمن السيبراني</p>
+    <div class="footer-links">
+        <a href="{% url 'report' %}">الإبلاغ عن احتيال</a>
+        <a href="{% url 'home' %}">الرئيسية</a>
+    </div>
+</footer>
+
+</body>
+</html>

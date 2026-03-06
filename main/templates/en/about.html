@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Yaqdha SA</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body class="ltr-body">
+
+<header>
+    <div class="logo-container">
+        <img src="{% static 'logo.png' %}" class="site-logo" alt="Logo">
+        <h1>Yaqdha SA</h1>
+    </div>
+    <nav>
+        <a href="{% url 'home_en' %}">Home</a>
+        <a href="{% url 'scams_en' %}">Types</a>
+        <a href="{% url 'home' %}" class="lang-switch">العربية 🌐</a>
+    </nav>
+</header>
+
+<div class="container">
+    <section>
+        <h2>About Us</h2>
+        <p><strong>Yaqdha SA</strong> is a technical awareness initiative launched as a graduation project. It aims to bridge the cybersecurity knowledge gap among individuals within the Kingdom of Saudi Arabia.</p>
+        <p>We believe that "The human is the first line of defense." Therefore, we designed this platform to be a simplified reference that explains electronic deception methods using local examples and real-life scenarios that citizens and residents encounter daily.</p>
+    </section>
+
+    <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ccc;">
+
+    <section>
+        <h2>Our Goals</h2>
+        <ul>
+            <li><strong>Digital Awareness:</strong> Educating the community about the latest social engineering and technical fraud methods.</li>
+            <li><strong>Reducing Victims:</strong> Contributing to lowering the rates of falling into fraud traps through early warning and education.</li>
+            <li><strong>Security Empowerment:</strong> Providing clear guidance and practical steps to handle suspicious messages and calls.</li>
+            <li><strong>Promoting Official Channels:</strong> Directing users to the correct ways to report through relevant official authorities in the Kingdom.</li>
+        </ul>
+    </section>
+</div>
+
+<footer>
+    <p>Yaqdha SA - Cybersecurity Awareness Project</p>
+    <div class="footer-links">
+        <a href="{% url 'report_en' %}">Report Fraud</a>
+    </div>
+</footer>
+
+</body>
+</html>

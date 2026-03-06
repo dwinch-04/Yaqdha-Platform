@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaqdha SA | Scam Awareness</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body class="ltr-body">
+<ul class="circles-area">
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+   <li></li>
+</ul>
+<header>
+    <div class="logo-container">
+        <img src="{% static 'logo.png' %}" class="site-logo" alt="Logo">
+        <h1>Yaqdha SA</h1>
+    </div>
+    <nav>
+        <a href="{% url 'scams_en' %}">Types</a>
+        <a class="nav-link" href="{% url 'simulator_en' %}">Phishing Simulator</a>
+        <a href="{% url 'home' %}" class="lang-switch">العربية 🌐</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="warning-banner">
+        <span>⚠️ <strong>Security Warning:</strong> Saudi government entities and banks will never ask for your passwords, PINs, or OTP codes via phone calls or suspicious links.</span>
+    </div>
+
+    <section>
+        <h2>Most Common Scams in Saudi Arabia</h2>
+        <p>Stay informed about the latest deceptive methods used by scammers locally.</p>
+        
+            <div class="scam-grid">
+    {% for scam in scams %}
+    <div class="scam-card">
+        <h3>{{ scam.title_en }}</h3>
+        <p>{{ scam.description_en }}</p>
+        <a href="{% url 'scam_detail_en' pk=scam.pk %}" class="btn-more">View Details</a>
+    </div>
+    {% empty %}
+    <p>No scam types added yet.</p>
+    {% endfor %}
+</div>
+
+        <div style="text-align: center;">
+            <a href="{% url 'scams_en' %}" class="btn-more">View All Scam Types</a>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>Yaqdha SA - Cybersecurity Awareness Project</p>
+    <div class="footer-links">
+        <a href="{% url 'report_en' %}">Report Fraud</a>
+        <a href="{% url 'about_en' %}">About Us</a>
+        <a href="{% url 'about_en' %}">Our Goal</a>
+     </div>
+</footer>
+<script src="{% static 'script.js' %}"></script>
+</body>
+</html>
