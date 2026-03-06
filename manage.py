@@ -20,3 +20,16 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+import os
+from django.core.management import execute_from_command_line
+
+try:
+    import django
+    django.setup()
+    from django.contrib.auth.models import User
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'ubas2004')
+        print("Admin user created successfully!")
+except Exception as e:
+    print(f"Admin creation error: {e}")
