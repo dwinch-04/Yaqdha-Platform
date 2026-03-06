@@ -14,3 +14,14 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yaqdha_platform.settings')
 
 application = get_wsgi_application()
+
+import django
+from django.contrib.auth.models import User
+
+try:
+    django.setup()
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', '12345678a')
+        print("Done: Admin created!")
+except Exception as e:
+    print(f"Error: {e}")
