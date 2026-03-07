@@ -6,3 +6,4 @@ django-ckeditor
 django-js-asset
 Pillow
 dj-database-url
+psycopg2-binary
