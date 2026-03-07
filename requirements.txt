@@ -5,3 +5,4 @@ whitenoise==6.12.0
 django-ckeditor
 django-js-asset
 Pillow
+dj-database-url
