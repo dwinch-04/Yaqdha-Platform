@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'yaqdha_platform.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='PASTE_YOUR_LINK_HERE',
+        default='postgresql://yaqdha_db_user:Dle0pqCq6Q7hvJcvVZLZE0CLCy5GodBX@dpg-d6lmrmvafjfc738lk0ug-a/yaqdha_db',
         conn_max_age=600
     )
 }
@@ -137,4 +137,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
