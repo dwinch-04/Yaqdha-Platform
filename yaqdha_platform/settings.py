@@ -1,5 +1,4 @@
 import os
-import dj_database_url
 """
 Django settings for yaqdha_platform project.
 
@@ -79,10 +78,10 @@ WSGI_APPLICATION = 'yaqdha_platform.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://yaqdha_db_user:Dle0pqCq6Q7hvJcvVZLZE0CLCy5GodBX@dpg-d6lmrmvafjfc738lk0ug-a/yaqdha_db',
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 
