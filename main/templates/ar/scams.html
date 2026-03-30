@@ -21,18 +21,23 @@
 </header>
 
 <div class="container">
+
     <section>
-        <div class="scam-grid">
+    <h2>أكثر أساليب الاحتيال شيوعاً في المملكة العربية السعودية</h2>
+    <p>ابقَ على اطلاع بأحدث طرق الأحتيال التي يستخدمها المحتالون على الصعيد المحلي.</p>
+
+             <div class="scam-grid">
              {% for scam in scams %}
              <div class="scam-card">
              <h3>{{ scam.title_ar }}</h3>
              <p>{{ scam.description_ar }}</p>
-            <a href="{% url 'scam_detail' pk=scam.pk %}" class="btn-more">عرض التفاصيل</a>
+             <a href="{% url 'scam_detail' pk=scam.pk %}" class="btn-more">عرض التفاصيل</a>
             </div>
             {% empty %}
             <p>لا يوجد أنواع احتيال مضافة حالياً.</p>
             {% endfor %}
             </div>
+
     </section>
 </div>
 
