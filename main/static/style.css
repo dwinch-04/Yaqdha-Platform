@@ -133,7 +133,17 @@ footer {
     vertical-align: middle;
 }
 
-
+.detail-container {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin: 40px auto;
+    width: 85%;
+    max-width: 500px;
+    padding: 30px;
+    text-align: center;
+    box-sizing: border-box;
+}
 .logo-container {
     display: flex;
     align-items: center;
