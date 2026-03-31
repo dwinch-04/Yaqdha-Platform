@@ -22,21 +22,20 @@
 
 <div class="container">
     <section>
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h2>Most Common Scams in Saudi Arabia</h2>
-        <p>Stay informed about the latest deceptive methods used by scammers locally.</p>
+        <h2>Scam Methods in Saudi Arabia</h2>
+        <p>Stay aware of the latest tactics used by scammers at the local level.</p>
         </div>
 
         <div class="scam-grid">
-    {% for scam in scams %}
-    <div class="scam-card">
+       {% for scam in scams %}
+        <div class="scam-card">
         <h3>{{ scam.title_en }}</h3>
         <p>{{ scam.description_en }}</p>
         <a href="{% url 'scam_detail_en' pk=scam.pk %}" class="btn-more">View Details</a>
-    </div>
-    {% empty %}
-    <p>No scam types added yet.</p>
-    {% endfor %}
+        </div>
+        {% empty %}
+        <p>No scam types added yet.</p>
+        {% endfor %}
 </div>
     </section>
 </div>
