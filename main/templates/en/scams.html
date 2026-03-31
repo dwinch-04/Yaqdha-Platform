@@ -21,13 +21,13 @@
 </header>
 
 <div class="container">
-    <section>
+    
+        <section>
         <h2>Scam Methods in Saudi Arabia</h2>
         <p>Stay aware of the latest tactics used by scammers at the local level.</p>
-        </div>
 
         <div class="scam-grid">
-       {% for scam in scams %}
+        {% for scam in scams %}
         <div class="scam-card">
         <h3>{{ scam.title_en }}</h3>
         <p>{{ scam.description_en }}</p>
@@ -36,7 +36,8 @@
         {% empty %}
         <p>No scam types added yet.</p>
         {% endfor %}
-</div>
+        </div>
+            
     </section>
 </div>
 
