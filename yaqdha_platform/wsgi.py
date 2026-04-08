@@ -8,13 +8,14 @@ https://docs.djangoproject.com/en/6.0/howto/deployment/wsgi/
 """
 
 import os
-
 from django.core.wsgi import get_wsgi_application
+from whitenoise import WhiteNoise
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yaqdha_platform.settings')
 
 application = get_wsgi_application()
 
-import django
-from django.contrib.auth.models import User
 
+
+application = WhiteNoise(application)
