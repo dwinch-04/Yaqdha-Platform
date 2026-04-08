@@ -16,6 +16,5 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yaqdha_platform.settings')
 
 application = get_wsgi_application()
 
-
-
-application = WhiteNoise(application)
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+application = WhiteNoise(application, root=os.path.join(base_dir, 'main', 'static'))
