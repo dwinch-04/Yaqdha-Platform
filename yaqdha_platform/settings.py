@@ -33,12 +33,14 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',
+    'django.contrib.staticfiles',
+    'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'ckeditor',
     'main',
 ]
@@ -136,5 +138,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dels5yyna',
+    'API_KEY': '397831715989485',
+    'API_SECRET': 'vhDPmWCDNYfxHiNTuqAAlUpKQC0'
+}
 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
