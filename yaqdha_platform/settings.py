@@ -117,6 +117,7 @@ USE_I18N = True
 USE_TZ = True
 
 SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
@@ -130,7 +131,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'main', 'static'),
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dels5yyna',
