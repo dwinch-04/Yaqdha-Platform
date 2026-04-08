@@ -131,6 +131,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'main', 'static'),
 ]
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
 WHITENOISE_MIME_TYPES = {
     '.css': 'text/css',
     '.js': 'application/javascript',
