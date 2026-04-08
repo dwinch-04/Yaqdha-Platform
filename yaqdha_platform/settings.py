@@ -1,5 +1,6 @@
 import dj_database_url
 import os
+from pathlib import Path
 """
 Django settings for yaqdha_platform project.
 
@@ -16,7 +17,6 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -131,22 +131,19 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'main', 'static'),
 ]
 
+WHITENOISE_MIME_TYPES = {
+    '.css': 'text/css',
+    '.js': 'application/javascript',
+}
 
 STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
-
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-MEDIA_URL = '/media/'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dels5yyna',
     'API_KEY': '397831715989485',
     'API_SECRET': 'vhDPmWCDNYfxHiNTuqAAlUpKQC0'
 }
-WHITENOISE_MIME_TYPES = {
-    '.css': 'text/css',
-    '.js': 'application/javascript',
-}
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
