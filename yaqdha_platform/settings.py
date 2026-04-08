@@ -143,7 +143,10 @@ CLOUDINARY_STORAGE = {
     'API_KEY': '397831715989485',
     'API_SECRET': 'vhDPmWCDNYfxHiNTuqAAlUpKQC0'
 }
-
+WHITENOISE_MIME_TYPES = {
+    '.css': 'text/css',
+    '.js': 'application/javascript',
+}
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
