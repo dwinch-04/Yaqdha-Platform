@@ -144,7 +144,8 @@ WHITENOISE_MIME_TYPES = {
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dels5yyna',
     'API_KEY': '397831715989485',
-    'API_SECRET': 'vhDPmWCDNYfxHiNTuqAAlUpKQC0'
+    'API_SECRET': 'vhDPmWCDNYfxHiNTuqAAlUpKQC0',
+    'STATICFILES_STORAGE': None,
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
