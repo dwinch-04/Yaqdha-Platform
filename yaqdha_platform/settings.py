@@ -131,6 +131,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'main', 'static'),
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
+WHITENOISE_MANIFEST_STRICT = False 
+WHITENOISE_KEEP_FILES_ON_DEPLOY = False 
+
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -141,8 +145,6 @@ WHITENOISE_MIME_TYPES = {
     '.js': 'application/javascript',
 }
 
-STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
-
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dels5yyna',
     'API_KEY': '397831715989485',
@@ -151,3 +153,4 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
