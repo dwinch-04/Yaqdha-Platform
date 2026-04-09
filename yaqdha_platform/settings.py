@@ -33,8 +33,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
     'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -132,13 +132,9 @@ STATICFILES_DIRS = [
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
-WHITENOISE_MANIFEST_STRICT = False 
-WHITENOISE_KEEP_FILES_ON_DEPLOY = False 
-
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-]
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_KEEP_FILES_ON_DEPLOY = False
+WHITENOISE_USE_FINDERS = True
 
 WHITENOISE_MIME_TYPES = {
     '.css': 'text/css',
