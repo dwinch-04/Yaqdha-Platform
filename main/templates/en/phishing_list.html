@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Scenarios | Yaqdha</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        .page-hero { background:linear-gradient(135deg,#004aad,#66ccff); color:white; padding:50px 5%; text-align:center; }
+        .page-hero h1 { margin:0 0 8px; font-size:2rem; }
+        .page-hero p  { margin:0; opacity:.9; font-size:1rem; }
+
+        .scenarios-wrap { width:90%; max-width:1100px; margin:36px auto; }
+
+        .scenarios-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+
+        .scenario-card {
+            background:white; border-radius:14px;
+            box-shadow:0 2px 12px rgba(0,0,0,.08);
+            overflow:hidden; transition:transform .2s, box-shadow .2s;
+            display:flex; flex-direction:column;
+        }
+        .scenario-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.12); }
+
+        .card-img-wrap { height:180px; overflow:hidden; background:#f0f4f8; display:flex; align-items:center; justify-content:center; }
+        .card-img-wrap img { width:100%; height:100%; object-fit:cover; }
+        .card-img-placeholder { color:#bbb; font-size:2.5rem; }
+
+        .card-body { padding:16px; flex:1; display:flex; flex-direction:column; }
+        .card-title { font-size:1rem; font-weight:bold; color:#1a1a2e; margin:0 0 8px; }
+
+        .card-badges { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+        .badge-scam   { background:#f8d7da; color:#721c24; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:bold; }
+        .badge-legit  { background:#d4edda; color:#155724; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:bold; }
+        .badge-easy   { background:#d4edda; color:#155724; padding:3px 10px; border-radius:12px; font-size:.75rem; }
+        .badge-medium { background:#fff3cd; color:#856404; padding:3px 10px; border-radius:12px; font-size:.75rem; }
+        .badge-hard   { background:#f8d7da; color:#721c24; padding:3px 10px; border-radius:12px; font-size:.75rem; }
+
+        .card-footer-row { margin-top:auto; padding-top:12px; }
+        .btn-view { display:inline-block; background:linear-gradient(90deg,#004aad,#66ccff); color:white; text-decoration:none; padding:8px 18px; border-radius:8px; font-size:.88rem; }
+
+        .empty-state { text-align:center; color:#aaa; padding:60px 20px; font-size:1rem; }
+    </style>
+</head>
+<body class="ltr-body">
+<header>
+    <div class="logo-container">
+        <a href="{% url 'home_en' %}"><img src="{% static 'logo-en.png' %}" class="site-logo" alt="Yaqdha"></a>
+    </div>
+    <nav>
+        <a href="{% url 'home_en' %}">Home</a>
+        <a href="{% url 'about_en' %}">About</a>
+        <a href="{% url 'scams_en' %}">Scam Types</a>
+        <a href="{% url 'phishing_list_en' %}">Phishing Scenarios</a>
+        <a href="{% url 'simulator_en' %}">Take Quiz</a>
+        <a href="{% url 'report_en' %}">Report</a>
+        <a href="{% url 'leaderboard_en' %}">Leaderboard</a>
+        <span class="nav-divider"></span>
+        {% if user.is_authenticated %}
+            <span class="nav-user">
+                <span class="nav-points"><i class="bi bi-star-fill"></i> {{ user.profile.points }}</span>
+                <span class="nav-level">{{ user.profile.level_name_en }}</span>
+                <span class="nav-username">{{ user.username }}</span>
+            </span>
+            <a href="{% url 'profile_en' %}" class="nav-auth">Profile</a>
+            {% if user.is_staff %}<a href="/admin/" class="nav-admin" target="_blank">Admin</a>{% endif %}
+            <a href="{% url 'logout_en' %}" class="nav-logout">Logout</a>
+        {% else %}
+            <a href="{% url 'login_en' %}" class="nav-auth">Login</a>
+            <a href="{% url 'register_en' %}" class="nav-auth nav-register">Register</a>
+        {% endif %}
+        <a href="{% url 'phishing_list_ar' %}" class="lang-switch">AR <i class="bi bi-globe2"></i></a>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1><i class="bi bi-bullseye"></i> Phishing Scenarios</h1>
+    <p>Browse all simulator scenarios and learn to spot phishing techniques used in the quiz</p>
+</div>
+
+<div class="scenarios-wrap">
+    {% if scenarios %}
+    <p style="color:#666; font-size:.9rem; margin-bottom:20px;">{{ scenarios|length }} scenarios available</p>
+    <div class="scenarios-grid">
+        {% for s in scenarios %}
+        <div class="scenario-card">
+            <div class="card-img-wrap">
+                {% if s.image %}
+                    <img src="{{ s.image.url }}" alt="{{ s.title_en }}">
+                {% else %}
+                    <span class="card-img-placeholder"><i class="bi bi-envelope-fill"></i></span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="card-title">{{ s.title_en }}</div>
+                <div class="card-badges">
+                    {% if s.is_scam %}
+                        <span class="badge-scam"><i class="bi bi-flag-fill"></i> Phishing</span>
+                    {% else %}
+                        <span class="badge-legit"><i class="bi bi-check-circle-fill"></i> Legitimate</span>
+                    {% endif %}
+                    <span class="badge-{{ s.difficulty }}">{{ s.get_difficulty_display }}</span>
+                </div>
+                <div class="card-footer-row">
+                    <a href="{% url 'phishing_detail_en' pk=s.pk %}" class="btn-view">View Details →</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">No scenarios added yet.</div>
+    {% endif %}
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-col">
+            <img src="{% static 'logo-en.png' %}" class="footer-logo" alt="Yaqdha">
+            <p class="footer-tagline">Yaqdha — Cybersecurity Awareness Project</p>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="{% url 'home_en' %}">Home</a></li>
+                <li><a href="{% url 'about_en' %}">About</a></li>
+                <li><a href="{% url 'scams_en' %}">Scam Types</a></li>
+                <li><a href="{% url 'phishing_list_en' %}">Phishing Scenarios</a></li>
+                <li><a href="{% url 'simulator_en' %}">Take Quiz</a></li>
+                <li><a href="{% url 'report_en' %}">Report</a></li>
+                <li><a href="{% url 'leaderboard_en' %}">Leaderboard</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 Yaqdha — All rights reserved</p></div>
+</footer>
+</body>
+</html>

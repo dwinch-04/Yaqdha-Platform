@@ -1,0 +1,81 @@
+{% extends 'en/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .lb-wrap { width: 90%; max-width: 800px; margin: 40px auto; }
+    .lb-wrap h2 { color: #004aad; margin-bottom: 6px; }
+    .lb-subtitle { color: #666; font-size: .9rem; margin-bottom: 28px; }
+
+    .lb-table { width: 100%; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .lb-table thead tr { background: linear-gradient(90deg,#004aad,#66ccff); color: white; }
+    .lb-table th { padding: 14px 16px; text-align: left; font-size: .9rem; font-weight: 600; }
+    .lb-table td { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-size: .95rem; }
+    .lb-table tr:last-child td { border-bottom: none; }
+    .lb-table tbody tr:hover td { background: #fafcff; }
+
+    .rank-cell { font-weight: bold; color: #004aad; font-size: 1.1rem; width: 50px; }
+    .rank-1 { color: #f5a623; font-size: 1.3rem; }
+    .rank-2 { color: #9b9b9b; font-size: 1.2rem; }
+    .rank-3 { color: #c47b2b; font-size: 1.15rem; }
+
+    .user-cell { display: flex; align-items: center; gap: 12px; }
+    .mini-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#004aad,#66ccff); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: .9rem; flex-shrink: 0; }
+
+    .pts { font-weight: bold; color: #004aad; }
+    .level-badge { background: #e8f0fe; color: #004aad; padding: 3px 10px; border-radius: 12px; font-size: .8rem; font-weight: 600; }
+    .acc-bar-wrap { background: #e9ecef; border-radius: 10px; height: 8px; width: 80px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 6px; }
+    .acc-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg,#004aad,#66ccff); }
+
+    .empty-lb { text-align: center; color: #aaa; padding: 50px; }
+    .your-row td { background: #e8f4fd !important; }
+</style>
+
+<div class="lb-wrap">
+    <h2><i class="bi bi-trophy-fill"></i> Leaderboard</h2>
+    <p class="lb-subtitle">Top 10 users ranked by total points earned.</p>
+
+    {% if leaderboard %}
+    <table class="lb-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Level</th>
+                <th>Points</th>
+                <th>Accuracy</th>
+                <th>Attempts</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in leaderboard %}
+            <tr {% if user.is_authenticated and entry.profile.user == user %}class="your-row"{% endif %}>
+                <td class="rank-cell {% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% endif %}">
+                    {% if forloop.counter == 1 %}<i class="bi bi-trophy-fill" style="color:#f5a623"></i>
+                    {% elif forloop.counter == 2 %}<i class="bi bi-trophy-fill" style="color:#9b9b9b"></i>
+                    {% elif forloop.counter == 3 %}<i class="bi bi-trophy-fill" style="color:#c47b2b"></i>
+                    {% else %}{{ forloop.counter }}{% endif %}
+                </td>
+                <td>
+                    <div class="user-cell">
+                        <div class="mini-avatar">{{ entry.profile.user.username|first|upper }}</div>
+                        <span>{{ entry.profile.user.username }}
+                            {% if user.is_authenticated and entry.profile.user == user %}<span style="font-size:.75rem;color:#004aad;opacity:.7;"> (you)</span>{% endif %}
+                        </span>
+                    </div>
+                </td>
+                <td><span class="level-badge">{{ entry.profile.level_name_en }}</span></td>
+                <td class="pts"><i class="bi bi-star-fill"></i> {{ entry.profile.points }}</td>
+                <td>
+                    <div class="acc-bar-wrap"><div class="acc-bar-fill" style="width:{{ entry.accuracy }}%"></div></div>
+                    {{ entry.accuracy }}%
+                </td>
+                <td style="color:#888;">{{ entry.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-lb">No data yet — <a href="{% url 'simulator_en' %}">be the first to take the quiz!</a></div>
+    {% endif %}
+</div>
+{% endblock %}

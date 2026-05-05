@@ -1,105 +1,293 @@
 {% extends 'ar/base.html' %}
 {% block content %}
 <style>
-    .scenario-card { display: none; }
-    .scenario-card.active { display: block !important; }
-    
-    .explanation-text { line-height: 1.6; }
+    /* ── Layout ── */
+    .sim-wrap { width:90%; max-width:720px; margin:40px auto; }
+
+    /* ── Intro ── */
+    .intro-card {
+        background:white; border-radius:20px; padding:40px 36px;
+        box-shadow:0 4px 24px rgba(0,0,0,.1); text-align:center;
+    }
+    .intro-card h1 { color:#004aad; font-size:1.8rem; margin:0 0 12px; }
+    .intro-card .lead { color:#555; font-size:1rem; margin:0 0 20px; line-height:1.7; }
+    .info-box { background:#e8f4fd; border-radius:10px; padding:12px 18px; font-size:.9rem; color:#004aad; margin-bottom:20px; }
+    .prev-accuracy { background:#f0f4f8; border-radius:10px; padding:12px 18px; font-size:.9rem; color:#444; margin-bottom:20px; }
+    .guest-notice { background:#fff8e1; border:1px solid #ffe082; border-radius:10px; padding:12px 18px; font-size:.9rem; color:#7b5b00; margin-bottom:20px; }
+    .btn-start {
+        background:linear-gradient(90deg,#004aad,#66ccff); color:white; border:none;
+        padding:14px 40px; border-radius:50px; font-size:1.1rem; font-weight:700;
+        cursor:pointer; font-family:inherit; transition:transform .2s;
+    }
+    .btn-start:hover { transform:translateY(-2px); }
+
+    /* ── Scenario card ── */
+    .scenario-card { display:none; }
+    .scenario-card.active { display:block; }
+
+    .sim-card {
+        background:white; border-radius:20px; overflow:hidden;
+        box-shadow:0 4px 24px rgba(0,0,0,.1); margin-bottom:20px;
+    }
+    .sim-card-header {
+        background:linear-gradient(90deg,#1a1a2e,#2d3561);
+        color:white; padding:14px 20px;
+        display:flex; justify-content:space-between; align-items:center;
+    }
+    .sim-counter { font-size:.9rem; opacity:.8; }
+    .difficulty-badge { font-size:.75rem; padding:4px 12px; border-radius:20px; font-weight:700; }
+    .diff-easy   { background:#d4edda; color:#155724; }
+    .diff-medium { background:#fff3cd; color:#856404; }
+    .diff-hard   { background:#f8d7da; color:#721c24; }
+
+    .sim-img-wrap { background:#f8f9fa; padding:16px; text-align:center; }
+    .sim-img-wrap img { max-height:380px; max-width:100%; object-fit:contain; border-radius:8px; }
+    .sim-img-placeholder { padding:40px; color:#bbb; font-size:3rem; }
+
+    .sim-body { padding:22px 24px; }
+    .sim-title { font-size:1.05rem; font-weight:700; color:#1a1a2e; margin:0 0 18px; }
+    .sim-question { font-size:.95rem; font-weight:600; color:#444; margin:0 0 14px; }
+
+    .answer-btns { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn-answer {
+        flex:1; min-width:140px; padding:12px 20px; border:none; border-radius:12px;
+        font-size:.95rem; font-weight:700; cursor:pointer; font-family:inherit; transition:transform .15s;
+    }
+    .btn-answer:hover { transform:translateY(-2px); }
+    .btn-phishing { background:#f8d7da; color:#721c24; }
+    .btn-phishing:hover { background:#f1b5ba; }
+    .btn-safe    { background:#d4edda; color:#155724; }
+    .btn-safe:hover    { background:#b8dfc2; }
+
+    /* ── Result box ── */
+    .result-box { display:none; padding:18px 24px; background:#f8f9fa; border-top:1px solid #eee; }
+    .feedback-title { font-size:1.1rem; font-weight:700; margin:0 0 6px; }
+    .feedback-correct { color:#155724; }
+    .feedback-wrong   { color:#721c24; }
+    .points-flash { color:#28a745; font-weight:700; font-size:1rem; margin:4px 0 10px; }
+    .explanation-text { color:#444; line-height:1.75; font-size:.93rem; margin:0 0 16px; }
+    .btn-next {
+        background:linear-gradient(90deg,#004aad,#66ccff); color:white; border:none;
+        padding:10px 24px; border-radius:10px; font-size:.9rem; font-weight:600;
+        cursor:pointer; font-family:inherit;
+    }
+
+    /* ── Summary ── */
+    .summary-card {
+        background:white; border-radius:20px; padding:40px 36px;
+        box-shadow:0 4px 24px rgba(0,0,0,.1); text-align:center;
+    }
+    .summary-card h2 { color:#004aad; margin:0 0 24px; font-size:1.6rem; }
+    .summary-stats { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+    .summary-stat-box { background:#f0f4f8; border-radius:12px; padding:16px; }
+    .s-num { font-size:2rem; font-weight:800; color:#004aad; }
+    .s-lbl { font-size:.8rem; color:#888; margin-top:2px; }
+    .summary-points-block { background:#e8f4fd; border-radius:12px; padding:16px; margin-bottom:16px; }
+    .pts-earned { font-size:2rem; font-weight:800; color:#28a745; }
+    .improvement { color:#28a745; font-weight:600; font-size:.95rem; margin-top:8px; }
+    .regression  { color:#dc3545; font-weight:600; font-size:.95rem; margin-top:8px; }
+    .btn-retry {
+        background:linear-gradient(90deg,#004aad,#66ccff); color:white; border:none;
+        padding:12px 32px; border-radius:50px; font-size:1rem; font-weight:700;
+        cursor:pointer; font-family:inherit; margin-top:8px;
+    }
 </style>
 
-<div class="container mt-5 text-center" dir="rtl" style="max-width: 800px;">
-    
+<div class="sim-wrap">
+
     <div id="intro-screen">
-        <h1 class="mb-4">هل يمكنك التعرّف على محاولة تصيّد احتيالي؟</h1>
-        <p class="lead">تحاول هجمات التصيّد الاحتيالي خداع المستخدمين لمشاركة معلوماتهم الشخصية أو المالية، من خلال التظاهر بأنها شركات موثوقة.</p>
-        <div class="alert alert-info">
-            باستخدام الذكاء الاصطناعي، أصبحت هجمات التصيّد الاحتيالي أكثر تطوّرًا وتخصيصًا وانتشارًا.
+        <div class="intro-card">
+            <h1>هل يمكنك التعرّف على أساليب التصيّد الاحتيالي؟ <i class="bi bi-bullseye"></i></h1>
+            <p class="lead">تحاول هجمات التصيّد الاحتيالي خداع المستخدمين لمشاركة معلوماتهم الشخصية أو المالية.</p>
+            <div class="info-box"> أصبحت هجمات التصيّد أكثر تطوّرًا وانتشارًا.</div>
+
+            {% if not user.is_authenticated %}
+            <div class="guest-notice">أختبر نفسك كضيف — أو  <a href="{% url 'register_ar' %}">سجّل حساباً</a> لحفظ نقاطك وتتبع تقدمك.</div>
+            {% elif pre_accuracy is not None %}
+            <div class="prev-accuracy">دقتك السابقة: <strong>{{ pre_accuracy }}%</strong> من {{ pre_attempts }} محاولة — هل يمكنك التحسّن؟</div>
+            {% endif %}
+
+            <p style="font-weight:600; color:#1a1a2e; margin-bottom:18px;">يقوم الأختبار على قياس مدى معرفتك في التمييز بين ما هو من اساليب التصيد والإحتيالي والرسائل الشرعية التي قد تواجهك  </p>
+            <button onclick="startGame()" class="btn-start">ابدأ التحدي <i class="bi bi-rocket-takeoff-fill"></i></button>
         </div>
-        <h4 class="mt-4">هل يمكنك التمييز بين ما هو حقيقي وما هو عملية احتيال؟</h4>
-        <button onclick="startGame()" class="btn btn-primary btn-lg mt-3 px-5">ابدأ التحدي</button>
     </div>
 
-    <div id="game-container" style="display: none;">
+    <div id="game-container" style="display:none;">
         {% for scenario in scenarios %}
-        <div class="scenario-card {% if forloop.first %}active{% endif %}">
-            <div class="card mx-auto shadow" style="max-width: 500px; border-radius: 15px;">
-                <div class="card-header bg-dark text-white">الرسالة {{ forloop.counter }} من {{ scenarios|length }}</div>
-                
-                <div class="p-3 bg-white">
-                    <img src="{{ scenario.image.url }}" class="card-img" style="max-height: 400px; object-fit: contain;">
+        <div class="scenario-card {% if forloop.first %}active{% endif %}"
+             data-scenario-id="{{ scenario.id }}"
+             data-difficulty="{{ scenario.difficulty }}">
+            <div class="sim-card">
+                <div class="sim-card-header">
+                    <span class="sim-counter">الرسالة {{ forloop.counter }} من {{ scenarios|length }}</span>
+                    <span class="difficulty-badge diff-{{ scenario.difficulty }}">
+                        {% if scenario.difficulty == 'easy' %}سهل
+                        {% elif scenario.difficulty == 'medium' %}متوسط
+                        {% else %}صعب{% endif %}
+                    </span>
                 </div>
-                
-                <div class="card-body action-area">
-                    <h2 class="scenario-title">{{ scenario.title_ar }}</h2>
-                    <p class="fw-bold mb-4">ما هو قرارك؟</p>
-                    <div class="d-grid gap-2 d-md-block">
-                        <button onclick="checkAnswer(this, true)" 
-                                data-is-scam="{{ scenario.is_scam|yesno:'true,false' }}" 
-                                data-explanation="{{ scenario.explanation_ar|escapejs }}"
-                                class="btn btn-danger btn-lg px-4 m-1">🚩 تصيد احتيالي</button>
 
-                        <button onclick="checkAnswer(this, false)" 
-                                data-is-scam="{{ scenario.is_scam|yesno:'true,false' }}" 
-                                data-explanation="{{ scenario.explanation_ar|escapejs }}"
-                                class="btn btn-success btn-lg px-4 m-1">✅ آمن</button>
+                <div class="sim-img-wrap">
+                    {% if scenario.image %}
+                        <img src="{{ scenario.image.url }}" alt="{{ scenario.title_ar }}">
+                    {% else %}
+                        <div class="sim-img-placeholder"><i class="bi bi-envelope-fill"></i></div>
+                    {% endif %}
+                </div>
+
+                <div class="sim-body action-area">
+                    <div class="sim-title">{{ scenario.title_ar }}</div>
+                    <div class="sim-question">ما هو قرارك؟</div>
+                    <div class="answer-btns">
+                        <button class="btn-answer btn-phishing"
+                                onclick="checkAnswer(this, true)"
+                                data-is-scam="{{ scenario.is_scam|yesno:'true,false' }}"
+                                data-explanation="{{ scenario.explanation_ar|escapejs }}">
+                            <i class="bi bi-flag-fill"></i> تصيد احتيالي
+                        </button>
+                        <button class="btn-answer btn-safe"
+                                onclick="checkAnswer(this, false)"
+                                data-is-scam="{{ scenario.is_scam|yesno:'true,false' }}"
+                                data-explanation="{{ scenario.explanation_ar|escapejs }}">
+                            <i class="bi bi-check-circle-fill"></i> رسالة آمنة
+                        </button>
                     </div>
                 </div>
 
-                <div class="result-box card-footer" style="display: none; background-color: #f8f9fa;">
-                    <h3 class="feedback-title"></h3>
-                    <hr>
-                    <p class="explanation-text" style="font-size: 1.1rem;"></p>
-                    
+                <div class="result-box">
+                    <div class="feedback-title"></div>
+                    <div class="points-flash" style="display:none;"></div>
+                    <div class="explanation-text"></div>
                     {% if forloop.last %}
-                        <button onclick="location.reload()" class="btn btn-dark mt-3">إعادة الاختبار 🔄</button>
+                        <button onclick="showSummary()" class="btn-next">عرض النتائج <i class="bi bi-bar-chart-fill"></i></button>
                     {% else %}
-                        <button onclick="nextScenario(this)" class="btn btn-primary mt-3 px-4">الرسالة التالية ⬅️</button>
+                        <button onclick="nextScenario(this)" class="btn-next">التالي <i class="bi bi-arrow-right"></i></button>
                     {% endif %}
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
+
+    <div id="summary-screen" style="display:none;">
+        <div class="summary-card">
+            <h2>النتائج النهائية <i class="bi bi-flag-fill"></i></h2>
+            <div class="summary-stats">
+                <div class="summary-stat-box">
+                    <div class="s-num" id="summary-score"></div>
+                    <div class="s-lbl">إجابات صحيحة</div>
+                </div>
+                <div class="summary-stat-box">
+                    <div class="s-num" id="summary-accuracy"></div>
+                    <div class="s-lbl">الدقة</div>
+                </div>
+            </div>
+            <div id="summary-points" style="display:none;">
+                <div class="summary-points-block">
+                    <div class="pts-earned" id="summary-pts"></div>
+                    <div class="s-lbl">نقاط مكتسبة في هذه الجلسة</div>
+                    <div id="summary-level" style="margin-top:8px; font-size:.9rem; color:#444;"></div>
+                    <div id="summary-improvement"></div>
+                </div>
+            </div>
+            <div id="summary-guest" style="display:none; margin-top:12px; font-size:.9rem; color:#666;">
+                <a href="{% url 'register_ar' %}">سجّل حساباً</a> لحفظ تقدمك وجمع النقاط ليظهر  إسمك في لوحة الشرف!
+            </div>
+            <button onclick="location.reload()" class="btn-retry">إعادة الاختبار <i class="bi bi-arrow-clockwise"></i></button>
+        </div>
+    </div>
 </div>
 
 <script>
+const IS_AUTH = {{ user.is_authenticated|yesno:'true,false' }};
+const CSRF = '{{ csrf_token }}';
+const PRE_ACCURACY = {{ pre_accuracy|default:'null' }};
+
+let sessionCorrect = 0, sessionTotal = 0, sessionPoints = 0;
+let finalLevel = null, finalLevelName = null;
+
 function startGame() {
     document.getElementById('intro-screen').style.display = 'none';
     document.getElementById('game-container').style.display = 'block';
+    window.scrollTo(0, 0);
 }
 
 function checkAnswer(btn, userChoice) {
-    const currentCard = btn.closest('.scenario-card');
+    const card = btn.closest('.scenario-card');
     const isScam = btn.getAttribute('data-is-scam') === 'true';
     const explanation = btn.getAttribute('data-explanation');
+    const correct = (userChoice === isScam);
+    const scenarioId = parseInt(card.dataset.scenarioId);
 
-    currentCard.querySelector('.action-area').style.display = 'none';
-    const resultBox = currentCard.querySelector('.result-box');
+    sessionTotal++;
+    if (correct) sessionCorrect++;
+
+    card.querySelector('.action-area').style.display = 'none';
+    const resultBox = card.querySelector('.result-box');
     resultBox.style.display = 'block';
 
-    const title = currentCard.querySelector('.feedback-title');
-    if (userChoice === isScam) {
-        title.innerText = "إجابة صحيحة! 🎉";
-        title.className = "text-success fw-bold";
-    } else {
-        title.innerText = "للأسف، إجابة خاطئة! ❌";
-        title.className = "text-danger fw-bold";
+    const title = resultBox.querySelector('.feedback-title');
+    title.innerHTML = correct ? 'إجابة صحيحة! <i class="bi bi-emoji-smile"></i>' : 'للأسف، إجابة خاطئة! <i class="bi bi-x-circle-fill"></i>';
+    title.className = 'feedback-title ' + (correct ? 'feedback-correct' : 'feedback-wrong');
+    resultBox.querySelector('.explanation-text').innerText = explanation;
+
+    if (IS_AUTH) {
+        fetch('/api/submit-answer/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+            body: JSON.stringify({ scenario_id: scenarioId, was_correct: correct })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.ok && data.points_earned > 0) {
+                const flash = resultBox.querySelector('.points-flash');
+                flash.innerHTML = '+' + data.points_earned + ' نقطة <i class="bi bi-star-fill"></i>';
+                flash.style.display = 'block';
+                sessionPoints += data.points_earned;
+                finalLevel = data.level;
+                finalLevelName = data.level_name_ar;
+            }
+        });
     }
-    currentCard.querySelector('.explanation-text').innerText = explanation;
 }
 
 function nextScenario(btn) {
-    const currentCard = btn.closest('.scenario-card');
-    const nextCard = currentCard.nextElementSibling;
-
-    if (nextCard && nextCard.classList.contains('scenario-card')) {
-        currentCard.classList.remove('active');
-        nextCard.classList.add('active');
+    const current = btn.closest('.scenario-card');
+    const next = current.nextElementSibling;
+    if (next && next.classList.contains('scenario-card')) {
+        current.classList.remove('active');
+        next.classList.add('active');
         window.scrollTo(0, 0);
-    } else {
-        alert("عمل رائع! لقد أكملت التحدي بنجاح.");
-        location.reload();
     }
+}
+
+function showSummary() {
+    document.getElementById('game-container').style.display = 'none';
+    const s = document.getElementById('summary-screen');
+    s.style.display = 'block';
+
+    const accuracy = sessionTotal > 0 ? Math.round(sessionCorrect / sessionTotal * 100) : 0;
+    document.getElementById('summary-score').innerText = sessionCorrect + ' / ' + sessionTotal;
+    document.getElementById('summary-accuracy').innerText = accuracy + '%';
+
+    if (IS_AUTH) {
+        document.getElementById('summary-points').style.display = 'block';
+        document.getElementById('summary-pts').innerText = '+' + sessionPoints;
+        if (finalLevel) {
+            document.getElementById('summary-level').innerHTML =
+                'المستوى الحالي: <strong>' + finalLevel + ' · ' + finalLevelName + '</strong>';
+        }
+        if (PRE_ACCURACY !== null) {
+            const diff = accuracy - PRE_ACCURACY;
+            const el = document.getElementById('summary-improvement');
+            if (diff > 0)       el.innerHTML = '<span class="improvement">▲ تحسّن بمقدار ' + diff + '%</span>';
+            else if (diff < 0)  el.innerHTML = '<span class="regression">▼ انخفض بمقدار ' + Math.abs(diff) + '%</span>';
+            else                el.innerHTML = '<span style="color:#888">بنفس مستوى آخر جلسة</span>';
+        }
+    } else {
+        document.getElementById('summary-guest').style.display = 'block';
+    }
+    window.scrollTo(0, 0);
 }
 </script>
 {% endblock %}

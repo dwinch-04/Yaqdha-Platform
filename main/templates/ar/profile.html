@@ -1,0 +1,335 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسابي | يقظة </title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        .profile-wrap { width: 90%; max-width: 900px; margin: 30px auto; }
+
+        /* ── hero card ── */
+        .hero-card {
+            background: linear-gradient(135deg, #004aad, #66ccff);
+            border-radius: 16px; color: white;
+            padding: 30px; display: flex; align-items: center; gap: 24px;
+            margin-bottom: 24px;
+        }
+        .avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: bold; flex-shrink: 0;
+        }
+        .hero-info h2 { margin: 0 0 4px; font-size: 1.5rem; }
+        .hero-info p  { margin: 0; opacity: .85; font-size: .9rem; }
+        .hero-badge {
+            margin-right: auto; background: rgba(255,255,255,0.2);
+            border-radius: 12px; padding: 10px 20px; text-align: center;
+        }
+        .hero-badge .badge-level { font-size: 1.8rem; font-weight: bold; }
+        .hero-badge .badge-label { font-size: .8rem; opacity: .85; }
+
+        /* ── stat cards ── */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card {
+            background: white; border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.07);
+            padding: 20px; text-align: center;
+        }
+        .stat-card .stat-num { font-size: 2rem; font-weight: bold; color: #004aad; }
+        .stat-card .stat-lbl { font-size: .85rem; color: #666; margin-top: 4px; }
+
+        /* ── level progress ── */
+        .level-card {
+            background: white; border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.07);
+            padding: 20px; margin-bottom: 24px;
+        }
+        .level-card h3 { margin: 0 0 12px; color: #004aad; }
+        .progress-bar-wrap { background: #e9ecef; border-radius: 20px; height: 18px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg,#004aad,#66ccff); transition: width .6s; }
+        .progress-labels { display: flex; justify-content: space-between; font-size: .8rem; color: #888; margin-top: 6px; }
+
+        /* ── difficulty breakdown ── */
+        .diff-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .diff-card { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.07); padding: 20px; }
+        .diff-card h4 { margin: 0 0 8px; }
+        .diff-easy   h4 { color: #155724; }
+        .diff-medium h4 { color: #856404; }
+        .diff-hard   h4 { color: #721c24; }
+        .diff-accuracy { font-size: 1.6rem; font-weight: bold; }
+        .diff-meta { font-size: .8rem; color: #888; margin-top: 4px; }
+        .no-data { color: #aaa; font-size: .9rem; }
+
+        /* ── sections ── */
+        .section-card { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.07); padding: 24px; margin-bottom: 24px; }
+        .section-card h3 { margin: 0 0 18px; color: #004aad; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
+
+        /* ── settings forms ── */
+        .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        @media(max-width:600px){ .settings-grid { grid-template-columns: 1fr; } }
+        .settings-form h4 { margin: 0 0 14px; font-size: 1rem; }
+        .settings-form .form-group { margin-bottom: 12px; }
+        .settings-form label { display: block; font-size: .85rem; font-weight: bold; margin-bottom: 5px; }
+        .settings-form input {
+            width: 100%; padding: 9px 12px; border: 1px solid #ddd;
+            border-radius: 8px; font-size: .95rem; box-sizing: border-box; font-family: inherit;
+        }
+        .settings-form input:focus { outline: none; border-color: #66ccff; }
+        .btn-save {
+            background: linear-gradient(90deg,#004aad,#66ccff);
+            color: white; border: none; border-radius: 8px;
+            padding: 9px 20px; cursor: pointer; font-family: inherit; font-size: .9rem;
+        }
+        .btn-danger-sm {
+            background: #dc3545; color: white; border: none; border-radius: 8px;
+            padding: 9px 20px; cursor: pointer; font-family: inherit; font-size: .9rem;
+        }
+
+        /* ── messages ── */
+        .msg-success { background:#d4edda; border:1px solid #c3e6cb; border-radius:8px; padding:10px 14px; margin-bottom:16px; color:#155724; font-size:.9rem; }
+        .msg-error   { background:#f8d7da; border:1px solid #f5c6cb; border-radius:8px; padding:10px 14px; margin-bottom:16px; color:#721c24; font-size:.9rem; }
+
+        /* ── history table ── */
+        .history-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+        .history-table th { background: #f8f9fa; padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6; color: #555; font-weight: bold; }
+        .history-table td { padding: 10px; border-bottom: 1px solid #f0f0f0; }
+        .history-table tr:hover td { background: #fafafa; }
+        .badge-correct { background:#d4edda; color:#155724; padding:2px 10px; border-radius:12px; font-size:.8rem; }
+        .badge-wrong   { background:#f8d7da; color:#721c24; padding:2px 10px; border-radius:12px; font-size:.8rem; }
+        .badge-diff { padding:2px 10px; border-radius:12px; font-size:.8rem; }
+        .badge-easy   { background:#d4edda; color:#155724; }
+        .badge-medium { background:#fff3cd; color:#856404; }
+        .badge-hard   { background:#f8d7da; color:#721c24; }
+        .empty-history { text-align:center; color:#aaa; padding:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo-container">
+        <a href="{% url 'home' %}"><img src="{% static 'logo-ar.png' %}" class="site-logo" alt="يقظة"></a>
+    </div>
+    <nav>
+        <a href="{% url 'home' %}">الرئيسية</a>
+        <a href="{% url 'about' %}">من نحن</a>
+        <a href="{% url 'scams' %}">أنواع الإحتيال</a>
+        <a href="{% url 'phishing_list_ar' %}">سيناريوهات الإحتيال</a>
+        <a href="{% url 'simulator_ar' %}">اختبر نفسك</a>
+        <a href="{% url 'report' %}">الإبلاغ عن إحتيال</a>
+        <a href="{% url 'leaderboard_ar' %}">لوحة الشرف</a>
+        <span class="nav-divider"></span>
+        <span class="nav-user">
+            <span class="nav-points"><i class="bi bi-star-fill"></i> {{ profile.points }}</span>
+            <span class="nav-level">{{ profile.level_name_ar }}</span>
+            <span class="nav-username">{{ user.username }}</span>
+        </span>
+        <a href="{% url 'profile_ar' %}" class="nav-auth">حسابي</a>
+        {% if user.is_staff %}<a href="/admin/" class="nav-admin" target="_blank">لوحة التحكم</a>{% endif %}
+        <a href="{% url 'logout_ar' %}" class="nav-logout">خروج</a>
+        <a href="{% url 'home_en' %}" class="lang-switch">EN <i class="bi bi-globe2"></i></a>
+    </nav>
+</header>
+
+<div class="profile-wrap">
+
+    {% for msg in messages.success %}
+    <div class="msg-success"><i class="bi bi-check-lg"></i> {{ msg }}</div>
+    {% endfor %}
+    {% for msg in messages.error %}
+    <div class="msg-error"><i class="bi bi-x-lg"></i> {{ msg }}</div>
+    {% endfor %}
+
+    <!-- Hero -->
+    <div class="hero-card">
+        <div class="avatar">{{ user.username|first|upper }}</div>
+        <div class="hero-info">
+            <h2>{{ user.username }}</h2>
+            <p>انضممت ليقظة في {{ joined|date:"Y/m/d" }}</p>
+        </div>
+        <div class="hero-badge">
+            <div class="badge-level">{{ profile.level_name_ar }}</div>
+            <div class="badge-label">مستوى {{ profile.level }}</div>
+        </div>
+    </div>
+
+    <div style="margin-bottom:18px;">
+        <a href="{% url 'my_reports_ar' %}" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,#004aad,#66ccff);color:white;text-decoration:none;padding:9px 20px;border-radius:8px;font-size:.9rem;font-family:inherit;">
+            <i class="bi bi-file-earmark-text"></i> بلاغاتي
+        </a>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-num">{{ profile.points }}</div>
+            <div class="stat-lbl">النقاط الكلية</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">{{ total }}</div>
+            <div class="stat-lbl">إجمالي المحاولات</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">{{ correct }}</div>
+            <div class="stat-lbl">إجابات صحيحة</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">{{ overall_accuracy }}%</div>
+            <div class="stat-lbl">الدقة الكلية</div>
+        </div>
+    </div>
+
+    <!-- Level progress -->
+    <div class="level-card">
+        <h3>تقدم المستوى</h3>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" style="width: {{ profile.level_progress_pct }}%"></div>
+        </div>
+        <div class="progress-labels">
+            <span>{{ profile.level_name_ar }}</span>
+            {% if next_level %}
+            <span>{{ next_level.pts_needed }} نقطة للوصول لـ {{ next_level.name_ar }}</span>
+            {% else %}
+            <span>وصلت للمستوى الأعلى <i class="bi bi-trophy-fill"></i></span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Difficulty breakdown -->
+    <div class="diff-row">
+        {% for key, d in by_difficulty.items %}
+        <div class="diff-card diff-{{ key }}">
+            <h4>
+                {% if key == 'easy' %}سهل <i class="bi bi-circle-fill" style="color:#28a745"></i>
+                {% elif key == 'medium' %}متوسط <i class="bi bi-circle-fill" style="color:#ffc107"></i>
+                {% else %}صعب <i class="bi bi-circle-fill" style="color:#dc3545"></i>{% endif %}
+            </h4>
+            {% if d.accuracy is not None %}
+                <div class="diff-accuracy">{{ d.accuracy }}%</div>
+                <div class="diff-meta">{{ d.correct }} صح / {{ d.total }} محاولة</div>
+            {% else %}
+                <div class="no-data">لا توجد محاولات بعد</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Account settings -->
+    <div class="section-card">
+        <h3>إعدادات الحساب</h3>
+        <div class="settings-grid">
+            <div class="settings-form">
+                <h4>تغيير اسم المستخدم</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_username">
+                    <div class="form-group">
+                        <label>اسم المستخدم الجديد</label>
+                        <input type="text" name="username" value="{{ user.username }}" required>
+                    </div>
+                    <button type="submit" class="btn-save">حفظ</button>
+                </form>
+            </div>
+            <div class="settings-form">
+                <h4>تغيير كلمة المرور</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="change_password">
+                    <div class="form-group">
+                        <label>كلمة المرور الحالية</label>
+                        <input type="password" name="old_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور الجديدة</label>
+                        <input type="password" name="new_password1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>تأكيد كلمة المرور</label>
+                        <input type="password" name="new_password2" required>
+                    </div>
+                    <button type="submit" class="btn-save">تغيير</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attempt history -->
+    <div class="section-card">
+        <h3>سجل المحاولات <span style="font-size:.85rem; color:#888; font-weight:normal;">(آخر 50)</span></h3>
+        {% if recent_attempts %}
+        <div style="overflow-x:auto;">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>السيناريو</th>
+                    <th>الصعوبة</th>
+                    <th>النتيجة</th>
+                    <th>التاريخ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in recent_attempts %}
+                <tr>
+                    <td>{{ attempt.scenario.title_ar }}</td>
+                    <td>
+                        <span class="badge-diff badge-{{ attempt.scenario.difficulty }}">
+                            {% if attempt.scenario.difficulty == 'easy' %}سهل
+                            {% elif attempt.scenario.difficulty == 'medium' %}متوسط
+                            {% else %}صعب{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        {% if attempt.was_correct %}
+                        <span class="badge-correct">صحيح <i class="bi bi-check-lg"></i></span>
+                        {% else %}
+                        <span class="badge-wrong">خطأ <i class="bi bi-x-lg"></i></span>
+                        {% endif %}
+                    </td>
+                    <td style="color:#888; font-size:.85rem;">{{ attempt.created_at|date:"Y/m/d H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {% else %}
+        <div class="empty-history">لا توجد محاولات بعد — <a href="{% url 'simulator_ar' %}">ابدأ التحدي الآن</a></div>
+        {% endif %}
+    </div>
+
+    <!-- Danger zone -->
+    <div class="section-card" style="border: 1px solid #f5c6cb;">
+        <h3 style="color:#dc3545;">منطقة الخطر</h3>
+        <p style="color:#666; font-size:.9rem;">سيؤدي مسح السجل إلى حذف جميع محاولاتك وإعادة نقاطك إلى صفر. لا يمكن التراجع عن هذا الإجراء.</p>
+        <form method="post" onsubmit="return confirm('هل أنت متأكد؟ سيتم مسح جميع بياناتك.')">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete_history">
+            <button type="submit" class="btn-danger-sm">مسح السجل وإعادة النقاط</button>
+        </form>
+    </div>
+
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-col">
+            <img src="{% static 'logo-ar.png' %}" class="footer-logo" alt="يقظة">
+            <p class="footer-tagline">يقظة  — مشروع توعوي للأمن السيبراني</p>
+        </div>
+        <div class="footer-col">
+            <h4>روابط سريعة</h4>
+            <ul>
+                <li><a href="{% url 'home' %}">الرئيسية</a></li>
+                <li><a href="{% url 'about' %}">من نحن</a></li>
+                <li><a href="{% url 'scams' %}">أنواع الإحتيال</a></li>
+                <li><a href="{% url 'phishing_list_ar' %}">سيناريوهات الإحتيال</a></li>
+                <li><a href="{% url 'simulator_ar' %}">اختبر نفسك</a></li>
+                <li><a href="{% url 'report' %}">الإبلاغ عن إحتيال</a></li>
+                <li><a href="{% url 'leaderboard_ar' %}">لوحة الشرف</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 يقظة  — جميع الحقوق محفوظة</p></div>
+</footer>
+</body>
+</html>

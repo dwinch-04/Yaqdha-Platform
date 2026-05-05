@@ -1,79 +1,205 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>يقظة SA | التوعية ضد الاحتيال</title>
+    <title>يقظة</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #001f5c 0%, #004aad 55%, #66ccff 100%);
+            color: white; padding: 80px 5% 70px; text-align: center; position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 70% 50%, rgba(102,204,255,.18) 0%, transparent 70%);
+        }
+        .hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+        .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin: 0 0 16px; line-height: 1.3; }
+        .hero p  { font-size: 1.1rem; opacity: .9; margin: 0 0 32px; }
+        .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .btn-hero-primary {
+            background: white; color: #004aad; padding: 13px 32px; border-radius: 50px;
+            text-decoration: none; font-weight: 700; font-size: 1rem; transition: transform .2s;
+        }
+        .btn-hero-primary:hover { transform: translateY(-2px); }
+        .btn-hero-outline {
+            border: 2px solid rgba(255,255,255,.7); color: white; padding: 13px 32px; border-radius: 50px;
+            text-decoration: none; font-weight: 600; font-size: 1rem; transition: background .2s;
+        }
+        .btn-hero-outline:hover { background: rgba(255,255,255,.12); }
+
+        /* Stats bar */
+        .stats-bar {
+            background: white; display: flex; justify-content: center; flex-wrap: wrap;
+            box-shadow: 0 4px 20px rgba(0,0,0,.07); gap: 0;
+        }
+        .stat-item {
+            flex: 1; min-width: 160px; padding: 24px 20px; text-align: center;
+            border-left: 1px solid #f0f0f0;
+        }
+        .stat-item:last-child { border-left: none; }
+        .stat-num { font-size: 2rem; font-weight: 800; color: #004aad; }
+        .stat-lbl { font-size: .82rem; color: #888; margin-top: 2px; }
+
+        /* Warning banner */
+        .warning-banner {
+            background: linear-gradient(90deg, #fff3cd, #fff8e1);
+            border-right: 4px solid #f5a623;
+            padding: 14px 20px; margin: 28px auto;
+            border-radius: 0 10px 10px 0;
+            width: 90%; max-width: 1000px; font-size: .95rem; color: #7b5b00;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .warning-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+        /* Sections */
+        .home-section { width: 90%; max-width: 1100px; margin: 0 auto 48px; }
+        .section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .section-header h2 { color: #004aad; font-size: 1.4rem; margin: 0; }
+        .section-header a  { color: #66ccff; font-size: .9rem; text-decoration: none; }
+        .section-header a:hover { text-decoration: underline; }
+
+        /* Scam grid */
+        .scam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+        .scam-card {
+            background: white; border-radius: 14px; padding: 22px;
+            box-shadow: 0 2px 12px rgba(0,0,0,.07);
+            border-top: 4px solid transparent;
+            border-image: linear-gradient(90deg,#004aad,#66ccff) 1;
+            transition: transform .2s, box-shadow .2s;
+            text-decoration: none; color: inherit; display: block;
+        }
+        .scam-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+        .scam-card h3 { margin: 0 0 10px; color: #1a1a2e; font-size: 1rem; }
+        .scam-card p  { margin: 0 0 14px; color: #555; font-size: .9rem; line-height: 1.6; }
+        .card-link { color: #004aad; font-size: .85rem; font-weight: 600; }
+
+        /* CTA banner */
+        .cta-banner {
+            background: linear-gradient(135deg, #004aad, #66ccff);
+            border-radius: 16px; padding: 40px; text-align: center; color: white; margin-bottom: 48px;
+        }
+        .cta-banner h2 { margin: 0 0 10px; font-size: 1.6rem; }
+        .cta-banner p  { margin: 0 0 24px; opacity: .9; }
+        .btn-cta {
+            background: white; color: #004aad; padding: 12px 32px; border-radius: 50px;
+            text-decoration: none; font-weight: 700; font-size: 1rem;
+        }
+    </style>
 </head>
 <body>
-<ul class="circles-area">
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-   <li></li>
-</ul>
 <header>
     <div class="logo-container">
-        <img src="{% static 'logo.png' %}" class="site-logo" alt="Logo">
-        <h3>يقظة SA</h3>
+        <a href="{% url 'home' %}"><img src="{% static 'logo-ar.png' %}" class="site-logo" alt="يقظة"></a>
     </div>
     <nav>
-        <a class="nav-link" href="{% url 'simulator_ar' %}">اختبر نفسك</a>
-        <a href="{% url 'home_en' %}" class="lang-switch">EN🌐</a>
+        <a href="{% url 'home' %}">الرئيسية</a>
+        <a href="{% url 'about' %}">من نحن</a>
+        <a href="{% url 'scams' %}">أنواع الإحتيال</a>
+        <a href="{% url 'phishing_list_ar' %}">سيناريوهات الإحتيال</a>
+        <a href="{% url 'simulator_ar' %}">اختبر نفسك</a>
+        <a href="{% url 'report' %}">الإبلاغ عن إحتيال</a>
+        <a href="{% url 'leaderboard_ar' %}">لوحة الشرف</a>
+        <span class="nav-divider"></span>
+        {% if user.is_authenticated %}
+            <span class="nav-user">
+                <span class="nav-points"><i class="bi bi-star-fill"></i> {{ user.profile.points }}</span>
+                <span class="nav-level">{{ user.profile.level_name_ar }}</span>
+                <span class="nav-username">{{ user.username }}</span>
+            </span>
+            <a href="{% url 'profile_ar' %}" class="nav-auth">حسابي</a>
+            {% if user.is_staff %}<a href="/admin/" class="nav-admin" target="_blank">لوحة التحكم</a>{% endif %}
+            <a href="{% url 'logout_ar' %}" class="nav-logout">خروج</a>
+        {% else %}
+            <a href="{% url 'login_ar' %}" class="nav-auth">دخول</a>
+            <a href="{% url 'register_ar' %}" class="nav-auth nav-register">تسجيل</a>
+        {% endif %}
+        <a href="{% url 'home_en' %}" class="lang-switch">EN <i class="bi bi-globe2"></i></a>
     </nav>
 </header>
 
-<div class="container">
-    <div class="warning-banner">
-        <span>⚠️ <strong>تحذير أمني:</strong> الجهات الحكومية والبنوك في السعودية لا تطلب أرقامك السرية أو رموز التحقق عبر الاتصال أو الروابط.</span>
-    </div>
-
-    <section>
-    <h2>أكثر أساليب الاحتيال شيوعاً في المملكة العربية السعودية</h2>
-    <p>ابقَ على اطلاع بأحدث طرق الأحتيال التي يستخدمها المحتالون على الصعيد المحلي.</p>
-
-             <div class="scam-grid">
-             {% for scam in scams %}
-             <div class="scam-card">
-             <h3>{{ scam.title_ar }}</h3>
-             <p>{{ scam.description_ar }}</p>
-             <a href="{% url 'scam_detail' pk=scam.pk %}" class="btn-more">عرض التفاصيل</a>
-            </div>
-            {% empty %}
-            <p>لا يوجد أنواع احتيال مضافة حالياً.</p>
-            {% endfor %}
-            </div>
-
-        <div style="text-align: center;">
-        <a href="{% url 'scams' %}" class="btn-more">عرض جميع الأنواع</a>
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>كن يقظاً ضد التصيّد الاحتيالي <i class="bi bi-shield-fill"></i></h1>
+        <p>منصة تفاعلية لتعلّم كيفية التعرف على الاحتيال الإلكتروني وحماية نفسك ومجتمعك ضد التصيّد الإحتيالي.</p>
+        <div class="hero-btns">
+            <a href="{% url 'simulator_ar' %}" class="btn-hero-primary">اختبر نفسك الآن</a>
+            <a href="{% url 'about' %}" class="btn-hero-outline">تعرّف على المنصة</a>
         </div>
-    </section>
+    </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+    <div class="stat-item"><div class="stat-num"><i class="bi bi-shield-fill"></i></div><div class="stat-lbl">تدرب على أساليب الأحتيال بعدة مستويات </div></div>
+    <div class="stat-item"><div class="stat-num"><i class="bi bi-bullseye"></i></div><div class="stat-lbl">تعرف على سيناريوهات احتيال واقعية</div></div>
+    <div class="stat-item"><div class="stat-num"><i class="bi bi-trophy-fill"></i></div><div class="stat-lbl">اختبر نفسك واجمع نقاط للتصدر قائمة الشرف</div></div>
+    <div class="stat-item"><div class="stat-num"><i class="bi bi-people-fill"></i></div><div class="stat-lbl">شارك أساليب الأحتيال التي تتعرض عليها</div></div>
 </div>
 
-<footer>
-    <p>يقظة SA - مشروع توعوي للأمن السيبراني</p>
-    <div class="footer-links">
-        <a href="{% url 'report' %}">الإبلاغ عن احتيال</a> | 
-        <a href="{% url 'about' %}">من نحن</a>
+ <br>
+<!-- Dynamic warning -->
+{% if warning %}
+<div class="warning-banner">
+    <span class="warning-icon"><i class="bi bi-exclamation-triangle-fill"></i></span>
+    <span>{{ warning.text_ar }}</span>
+</div>
+{% endif %}
+
+<!-- Scam types -->
+<div class="home-section">
+    <br>
+    <div class="section-header">
+        <h2>أبرز أساليب الاحتيال في المملكة</h2>
+        <a href="{% url 'scams' %}">عرض الكل ←</a>
     </div>
+    <div class="scam-grid">
+        {% for scam in scams %}
+        <a href="{% url 'scam_detail' pk=scam.pk %}" class="scam-card">
+            <h3>{{ scam.title_ar }}</h3>
+            <p>{{ scam.description_ar }}</p>
+            <span class="card-link">عرض التفاصيل ←</span>
+        </a>
+        {% empty %}
+        <p style="color:#aaa;">لا يوجد محتوى مضاف حالياً.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="home-section">
+    <div class="cta-banner">
+        <h2>هل يمكنك التعرّف على بعض أساليب التصيّد؟</h2>
+        <p> اختبر مستوى وعيك السيبراني وشارك من خلال محاكي تفاعلي الأن</p>
+        <a href="{% url 'simulator_ar' %}" class="btn-cta">ابدأ التحدي الآن <i class="bi bi-rocket-takeoff-fill"></i></a>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-col">
+            <img src="{% static 'logo-ar.png' %}" class="footer-logo" alt="يقظة">
+            <p class="footer-tagline">يقظة  — مشروع توعوي للأمن السيبراني</p>
+        </div>
+        <div class="footer-col">
+            <h4>روابط سريعة</h4>
+            <ul>
+                <li><a href="{% url 'home' %}">الرئيسية</a></li>
+                <li><a href="{% url 'about' %}">من نحن</a></li>
+                <li><a href="{% url 'scams' %}">أنواع الإحتيال</a></li>
+                <li><a href="{% url 'phishing_list_ar' %}">سيناريوهات الإحتيال</a></li>
+                <li><a href="{% url 'simulator_ar' %}">اختبر نفسك</a></li>
+                <li><a href="{% url 'report' %}">الإبلاغ عن إحتيال</a></li>
+                <li><a href="{% url 'leaderboard_ar' %}">لوحة الشرف</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 يقظة  — جميع الحقوق محفوظة</p></div>
 </footer>
 <script src="{% static 'script.js' %}"></script>
 </body>
-
 </html>
-

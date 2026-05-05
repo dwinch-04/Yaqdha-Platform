@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سيناريوهات التصيد | يقظة </title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+       .page-hero { background:linear-gradient(135deg,#001f5c,#004aad,#66ccff); color:white; padding:55px 5%; text-align:center; }
+        .page-hero h1 { margin:0 0 8px; font-size:2rem; font-weight:800; }
+        .page-hero p  { margin:0 auto; opacity:.9; font-size:1rem; }
+
+        .scenarios-wrap { width:90%; max-width:1100px; margin:36px auto; }
+
+        .filter-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; align-items:center; }
+        .filter-bar span { font-size:.85rem; color:#666; }
+        .filter-btn { padding:5px 14px; border-radius:20px; border:1px solid #ddd; background:white; cursor:pointer; font-size:.85rem; font-family:inherit; transition:all .2s; }
+        .filter-btn.active,.filter-btn:hover { background:linear-gradient(90deg,#004aad,#66ccff); color:white; border-color:transparent; }
+
+        .scenarios-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+
+        .scenario-card {
+            background:white; border-radius:14px;
+            box-shadow:0 2px 12px rgba(0,0,0,.08);
+            overflow:hidden; transition:transform .2s, box-shadow .2s;
+            display:flex; flex-direction:column;
+        }
+        .scenario-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.12); }
+
+        .card-img-wrap { height:180px; overflow:hidden; background:#f0f4f8; display:flex; align-items:center; justify-content:center; }
+        .card-img-wrap img { width:100%; height:100%; object-fit:cover; }
+        .card-img-placeholder { color:#bbb; font-size:2.5rem; }
+
+        .card-body { padding:16px; flex:1; display:flex; flex-direction:column; }
+        .card-title { font-size:1rem; font-weight:bold; color:#1a1a2e; margin:0 0 8px; }
+
+        .card-badges { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+        .badge-scam    { background:#f8d7da; color:#721c24; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:bold; }
+        .badge-legit   { background:#d4edda; color:#155724; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:bold; }
+        .badge-easy    { background:#d4edda; color:#155724; padding:3px 10px; border-radius:12px; font-size:.75rem; }
+        .badge-medium  { background:#fff3cd; color:#856404; padding:3px 10px; border-radius:12px; font-size:.75rem; }
+        .badge-hard    { background:#f8d7da; color:#721c24; padding:3px 10px; border-radius:12px; font-size:.75rem; }
+
+        .card-footer-row { margin-top:auto; padding-top:12px; }
+        .btn-view { display:inline-block; background:linear-gradient(90deg,#004aad,#66ccff); color:white; text-decoration:none; padding:8px 18px; border-radius:8px; font-size:.88rem; }
+
+        .empty-state { text-align:center; color:#aaa; padding:60px 20px; font-size:1rem; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo-container">
+        <a href="{% url 'home' %}"><img src="{% static 'logo-ar.png' %}" class="site-logo" alt="يقظة"></a>
+    </div>
+    <nav>
+        <a href="{% url 'home' %}">الرئيسية</a>
+        <a href="{% url 'about' %}">من نحن</a>
+        <a href="{% url 'scams' %}">أنواع الإحتيال</a>
+        <a href="{% url 'phishing_list_ar' %}">سيناريوهات الإحتيال</a>
+        <a href="{% url 'simulator_ar' %}">اختبر نفسك</a>
+        <a href="{% url 'report' %}">الإبلاغ عن إحتيال</a>
+        <a href="{% url 'leaderboard_ar' %}">لوحة الشرف</a>
+        <span class="nav-divider"></span>
+        {% if user.is_authenticated %}
+            <span class="nav-user">
+                <span class="nav-points"><i class="bi bi-star-fill"></i> {{ user.profile.points }}</span>
+                <span class="nav-level">{{ user.profile.level_name_ar }}</span>
+                <span class="nav-username">{{ user.username }}</span>
+            </span>
+            <a href="{% url 'profile_ar' %}" class="nav-auth">حسابي</a>
+            {% if user.is_staff %}<a href="/admin/" class="nav-admin" target="_blank">لوحة التحكم</a>{% endif %}
+            <a href="{% url 'logout_ar' %}" class="nav-logout">خروج</a>
+        {% else %}
+            <a href="{% url 'login_ar' %}" class="nav-auth">دخول</a>
+            <a href="{% url 'register_ar' %}" class="nav-auth nav-register">تسجيل</a>
+        {% endif %}
+        <a href="{% url 'phishing_list_en' %}" class="lang-switch">EN <i class="bi bi-globe2"></i></a>
+    </nav>
+</header>
+
+<div class="page-hero">
+    <h1><i class="bi bi-bullseye"></i> سيناريوهات التصيّد الاحتيالي</h1>
+    <p>استعرض جميع سيناريوهات الإحتيال وتعرّف على أساليب التصيّد الشائعة</p>
+</div>
+
+<div class="scenarios-wrap">
+    {% if scenarios %}
+    <p style="color:#666; font-size:.9rem; margin-bottom:20px;">{{ scenarios|length }} سيناريوهات متاحة</p>
+    <div class="scenarios-grid">
+        {% for s in scenarios %}
+        <div class="scenario-card">
+            <div class="card-img-wrap">
+                {% if s.image %}
+                    <img src="{{ s.image.url }}" alt="{{ s.title_ar }}">
+                {% else %}
+                    <span class="card-img-placeholder"><i class="bi bi-envelope-fill"></i></span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="card-title">{{ s.title_ar }}</div>
+                <div class="card-badges">
+                    {% if s.is_scam %}
+                        <span class="badge-scam"><i class="bi bi-flag-fill"></i> احتيال</span>
+                    {% else %}
+                        <span class="badge-legit"><i class="bi bi-check-circle-fill"></i> شرعية</span>
+                    {% endif %}
+                    <span class="badge-{{ s.difficulty }}">
+                        {% if s.difficulty == 'easy' %}سهل
+                        {% elif s.difficulty == 'medium' %}متوسط
+                        {% else %}صعب{% endif %}
+                    </span>
+                </div>
+                <div class="card-footer-row">
+                    <a href="{% url 'phishing_detail_ar' pk=s.pk %}" class="btn-view">عرض التفاصيل ←</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">لا توجد سيناريوهات مضافة بعد.</div>
+    {% endif %}
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-col">
+            <img src="{% static 'logo-ar.png' %}" class="footer-logo" alt="يقظة">
+            <p class="footer-tagline">يقظة  — مشروع توعوي للأمن السيبراني</p>
+        </div>
+        <div class="footer-col">
+            <h4>روابط سريعة</h4>
+            <ul>
+                <li><a href="{% url 'home' %}">الرئيسية</a></li>
+                <li><a href="{% url 'about' %}">من نحن</a></li>
+                <li><a href="{% url 'scams' %}">أنواع الإحتيال</a></li>
+                <li><a href="{% url 'phishing_list_ar' %}">سيناريوهات الإحتيال</a></li>
+                <li><a href="{% url 'simulator_ar' %}">اختبر نفسك</a></li>
+                <li><a href="{% url 'report' %}">الإبلاغ عن إحتيال</a></li>
+                <li><a href="{% url 'leaderboard_ar' %}">لوحة الشرف</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 يقظة  — جميع الحقوق محفوظة</p></div>
+</footer>
+</body>
+</html>

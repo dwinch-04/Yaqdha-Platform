@@ -4,37 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scam Types | Yaqdha</title>
+    <title>Register | Yaqdha</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <style>
-        .page-hero { background:linear-gradient(135deg,#001f5c,#004aad,#66ccff); color:white; padding:55px 5%; text-align:center; }
-        .page-hero h1 { margin:0 0 8px; font-size:2rem; font-weight:800; }
-        .page-hero p  { margin:0 auto; opacity:.9; font-size:1rem; }
-
-        .scams-wrap { width:90%; max-width:1100px; margin:40px auto; }
-
-        .scams-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
-        .scam-item {
-            background:white; border-radius:14px;
-            box-shadow:0 2px 12px rgba(0,0,0,.07);
-            padding:24px; display:flex; flex-direction:column;
-            border-left:5px solid;
-            border-image:linear-gradient(to bottom,#66ccff,#004aad) 1;
-            transition:transform .2s, box-shadow .2s;
-        }
-        .scam-item:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.1); }
-        .scam-item h3 { margin:0 0 10px; color:#1a1a2e; font-size:1rem; }
-        .scam-item p  { margin:0 0 16px; color:#555; font-size:.88rem; line-height:1.65; flex:1; }
-        .btn-detail { display:inline-block; background:linear-gradient(90deg,#004aad,#66ccff); color:white; text-decoration:none; padding:8px 18px; border-radius:8px; font-size:.85rem; align-self:flex-start; }
-        .empty-msg { color:#aaa; text-align:center; padding:50px; font-size:1rem; }
-    </style>
 </head>
 <body class="ltr-body">
 <header>
     <div class="logo-container">
         <a href="{% url 'home_en' %}"><img src="{% static 'logo-en.png' %}" class="site-logo" alt="Yaqdha"></a>
     </div>
-    <nav>
+   <nav>
         <a href="{% url 'home_en' %}">Home</a>
         <a href="{% url 'about_en' %}">About</a>
         <a href="{% url 'scams_en' %}">Scam Types</a>
@@ -56,26 +34,39 @@
             <a href="{% url 'login_en' %}" class="nav-auth">Login</a>
             <a href="{% url 'register_en' %}" class="nav-auth nav-register">Register</a>
         {% endif %}
-        <a href="{% url 'scams' %}" class="lang-switch">AR <i class="bi bi-globe2"></i></a>
+        <a href="{% url 'home' %}" class="lang-switch">AR <i class="bi bi-globe2"></i></a>
     </nav>
 </header>
 
-<div class="page-hero">
-    <h1>Scam Methods in Saudi Arabia</h1>
-    <p>Stay aware of the latest tactics used by scammers at the local level</p>
-</div>
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Create an Account</h2>
+        <p class="auth-subtitle">Register to track your progress and earn points</p>
 
-<div class="scams-wrap">
-    <div class="scams-grid">
-        {% for scam in scams %}
-        <div class="scam-item">
-            <h3>{{ scam.title_en }}</h3>
-            <p>{{ scam.description_en }}</p>
-            <a href="{% url 'scam_detail_en' pk=scam.pk %}" class="btn-detail">View Details →</a>
-        </div>
-        {% empty %}
-        <div class="empty-msg">No scam types added yet.</div>
-        {% endfor %}
+        {% if errors %}
+            <div class="auth-error">
+                {% for e in errors %}<p>{{ e }}</p>{% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" value="{{ username|default:'' }}" required autofocus>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password1" required>
+            </div>
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" name="password2" required>
+            </div>
+            <button type="submit" class="auth-btn">Create Account</button>
+        </form>
+
+        <p class="auth-switch">Already have an account? <a href="{% url 'login_en' %}">Login</a></p>
     </div>
 </div>
 

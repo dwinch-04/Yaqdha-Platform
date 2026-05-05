@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'ckeditor',
+    'axes',
     'main',
 ]
 
@@ -40,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'yaqdha_platform.urls'
@@ -71,10 +73,22 @@ WSGI_APPLICATION = 'yaqdha_platform.wsgi.application'
    # )
 #}
 
+#DATABASES = {
+ #   'default': {
+  #      'ENGINE': 'django.db.backends.sqlite3',
+   #     'NAME': BASE_DIR / 'db.sqlite3',
+    #}
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': '5432',
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 
@@ -156,3 +170,15 @@ STORAGES = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# ── Rate limiting (django-axes) ──────────────────────────────────────────────
+AXES_FAILURE_LIMIT = 5          # lock after 5 failed attempts
+AXES_COOLOFF_TIME = 0.5         # locked for 30 minutes (in hours)
+AXES_LOCKOUT_CALLABLE = 'main.views.axes_lockout_response'
+AXES_RESET_ON_SUCCESS = True    # clear failures on successful login
+AXES_LOCKOUT_PARAMETERS = ['username', 'ip_address']  # lock by username + IP combined
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
